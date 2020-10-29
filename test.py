@@ -82,6 +82,13 @@ parser.add_argument("--mode", default="all", type=str, help="all or indoor for s
 parser.add_argument(
     "--tvsearch", action="store_true", help="whether thermal to visible search on RegDB"
 )
+parser.add_argument(
+    "--pooling_type",
+    default=1,
+    type=int,
+    help="pooling_type:0-->avgpooling, 1-->gm_pooling, 2-->similarity,3-->avgpooling+similarity, 4--> gm_pooling+similarity",
+)
+
 args = parser.parse_args()
 os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu
 
@@ -101,9 +108,15 @@ start_epoch = 0
 pool_dim = 2048
 print("==> Building model..")
 if args.method == "base":
-    net = embed_net(n_class, no_local="off", gm_pool="off", arch=args.arch)
+    # net = embed_net(n_class, no_local="off", gm_pool="off", arch=args.arch)
+    net = embed_net(
+        n_class, no_local="off", pooling_type=args.pooling_type, arch=args.arch
+    )
 else:
-    net = embed_net(n_class, no_local="on", gm_pool="on", arch=args.arch)
+    # net = embed_net(n_class, no_local="on", gm_pool="on", arch=args.arch)
+    net = embed_net(
+        n_class, no_local="on", pooling_type=args.pooling_type, arch=args.arch
+    )
 net.to(device)
 cudnn.benchmark = True
 
