@@ -94,6 +94,14 @@ parser.add_argument(
 args = parser.parse_args()
 os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu
 
+if args.pooling_type == 3 or args.pooling_type == 4:
+    feature_dim = 2048 + 162
+elif args.pooling_type == 2:
+    feature_dim = 162
+else:
+    feature_dim = 2048
+
+
 set_seed(args.seed)
 
 dataset = args.dataset
@@ -386,8 +394,8 @@ def test(epoch):
     print("Extracting Gallery Feature...")
     start = time.time()
     ptr = 0
-    gall_feat = np.zeros((ngall, 2048))
-    gall_feat_att = np.zeros((ngall, 2048))
+    gall_feat = np.zeros((ngall, feature_dim))
+    gall_feat_att = np.zeros((ngall, feature_dim))
     with torch.no_grad():
         for batch_idx, (input, label) in enumerate(gall_loader):
             batch_num = input.size(0)
@@ -403,8 +411,8 @@ def test(epoch):
     print("Extracting Query Feature...")
     start = time.time()
     ptr = 0
-    query_feat = np.zeros((nquery, 2048))
-    query_feat_att = np.zeros((nquery, 2048))
+    query_feat = np.zeros((nquery, feature_dim))
+    query_feat_att = np.zeros((nquery, feature_dim))
     with torch.no_grad():
         for batch_idx, (input, label) in enumerate(query_loader):
             batch_num = input.size(0)
