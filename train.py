@@ -118,11 +118,11 @@ if not os.path.isdir(args.vis_log_path):
 suffix = dataset
 if args.method == "agw":
     suffix = suffix + "_agw_p{}_n{}_lr_{}_seed_{}_pooling_type_{}".format(
-        args.num_pos, args.batch_size, args.lr, args.seed, args.pooltype
+        args.num_pos, args.batch_size, args.lr, args.seed, args.pooling_type
     )
 else:
-    suffix = suffix + "_base_p{}_n{}_lr_{}_seed_{}pooling_type_{}".format(
-        args.num_pos, args.batch_size, args.lr, args.seed, args.pooltype
+    suffix = suffix + "_base_p{}_n{}_lr_{}_seed_{}_pooling_type_{}".format(
+        args.num_pos, args.batch_size, args.lr, args.seed, args.pooling_type
     )
 
 
