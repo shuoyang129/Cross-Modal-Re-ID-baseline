@@ -273,24 +273,25 @@ class embed_net(nn.Module):
             similarities = self.self_similarity(x)
             x_pool = similarities
         elif self.pooling_type == 3:
+            similarities = self.self_similarity(x)
             x_pool = self.avgpool(x)
             x_pool = x_pool.view(x_pool.size(0), x_pool.size(1))
-            similarities = self.self_similarity(x)
-            x_pool = torch.concat((x_pool, similarities), dim=-1)
+            x_pool = torch.cat((x_pool, similarities), dim=-1)
         else:
+            similarities = self.self_similarity(x)
             b, c, h, w = x.shape
             x = x.view(b, c, -1)
             p = 3.0
             x_pool = (torch.mean(x ** p, dim=-1) + 1e-12) ** (1 / p)
-            similarities = self.self_similarity(x)
-            x_pool = torch.concat((x_pool, similarities), dim=-1)
+            x_pool = torch.cat((x_pool, similarities), dim=-1)
 
         feat = self.bottleneck(x_pool)
 
         if self.training:
             return x_pool, self.classifier(feat)
         else:
-            return self.l2norm(x_pool), self.l2norm(feat)
+            # return self.l2norm(x_pool), self.l2norm(feat)
+            return x_pool, feat
 
     def self_similarity(self, featuremaps, norm_type="l2", order=1):
         # norm_type: l2 or softmax
